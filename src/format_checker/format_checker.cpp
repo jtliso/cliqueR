@@ -87,8 +87,8 @@ int main(int argc, char* argv[]) {
 
 		//label redundancy check
 		pair<map<string,int>::iterator, bool> ret;
-		ret = edges.insert(make_pair(L1+L2, ln_num));
-		if (!ret.second || !edges.insert(make_pair(L2+L1, ln_num)).second) {
+		ret = edges.insert(make_pair(L1+" "+L2, ln_num));
+		if (!ret.second || !edges.insert(make_pair(L2+" "+L1, ln_num)).second) {
 			cerr << "ERROR line " << ln_num << ": this edge is a duplicate of line " << ret.first->second << endl;
 			infile.close();
 			return -1;
