@@ -3,4 +3,6 @@ R Library used to calculate Maximal Cliques, Maximum Cliques, and Paracliques fo
 
 # Dependencies
 Libarary depends on Rcpp.
-```install.packages('Rcpp')
+```
+install.packages('Rcpp')
+```
