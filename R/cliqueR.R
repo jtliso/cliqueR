@@ -11,3 +11,14 @@ formatter <- function(filename){
 	return(result)
 }
 
+# Finds maximal cliques in the file specified by filename
+maximal <- function(filename){
+	#checking the format of the file
+	res <- formatter(filename)
+	
+	if(res == -1){
+		return(res)
+	}
+	
+	#sourceCpp("../src/Direct_Clique_4.2.2/clique.cpp")
+}
