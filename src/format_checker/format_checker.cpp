@@ -21,20 +21,7 @@ int format_checker(string file) {
 		return -1;
 	}
 	
-	size_t period;
 	string fname(file);
-	
-	period = fname.find_last_of(".");
-	if (period == fname.npos) {
-		cerr << "ERROR: use a .el file extension\n";
-		return -1;
-	}
-
-	if (fname.substr(period, fname.npos) != ".el") {
-		cerr << "ERROR: use a .el file extension\n";
-		return -1;
-	}
-
 
 	ifstream infile;
 	map <string, int> edges;
@@ -74,6 +61,13 @@ int format_checker(string file) {
 		//check for multiple tabs on a line
 		if (line.npos != line.find("\t",tab+1)) {
 			cerr << "ERROR line " << ln_num << ": labels cannot contain tabs\n";
+			infile.close();
+			return -1;
+		}
+
+		//check that edge is not a pair of itself
+		if(L1 == L2){
+			cerr << "ERROR line " << ln_num << ": edges cannot be to and from same vertex\n";
 			infile.close();
 			return -1;
 		}
