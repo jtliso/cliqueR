@@ -1,3 +1,4 @@
+#include <Rcpp.h>
 #include <cstdlib>
 #include <stdio.h>
 #include <iostream>
@@ -8,45 +9,28 @@
 #include <utility>
 
 using namespace std;
+using namespace Rcpp;
 
 #define USAGE "./format_checker [input file.el]\n"
 
-
-int main(int argc, char* argv[]) {
-	if (argc != 2) {
-		cerr << USAGE;
-		return -1;
-	}
-
+// [[Rcpp::export]]
+int format_checker(string file) {
 	/*--- Check for .el extension ---*/
-	if (argv[1] == NULL) {
+	if (file.c_str() == NULL) {
 		cerr << "NULL argument passed\n";
 		return -1;
 	}
 	
-	size_t period;
-	string fname(argv[1]);
-	
-	period = fname.find_last_of(".");
-	if (period == fname.npos) {
-		cerr << "ERROR: use a .el file extension\n";
-		return -1;
-	}
-
-	if (fname.substr(period, fname.npos) != ".el") {
-		cerr << "ERROR: use a .el file extension\n";
-		return -1;
-	}
-
+	string fname(file);
 
 	ifstream infile;
 	map <string, int> edges;
 	map <string, int> verts;
 
 	/*----Open the file---*/
-	infile.open(argv[1]);
+	infile.open(file.c_str());
 	if (!infile.is_open()) {
-		perror(argv[1]);
+		perror(file.c_str());
 		return -1;
 	}
 	
@@ -80,6 +64,13 @@ int main(int argc, char* argv[]) {
 			infile.close();
 			return -1;
 		}
+
+		//check that edge is not a pair of itself
+		if(L1 == L2){
+			cerr << "ERROR line " << ln_num << ": edges cannot be to and from same vertex\n";
+			infile.close();
+			return -1;
+		}
 		
 		//add labels to vertex list
 		verts.insert(make_pair(L1, 0));
@@ -102,7 +93,7 @@ int main(int argc, char* argv[]) {
 		cerr << "ERROR: provided & detected number of edges do not match\n";
 		return -1;
 	}
-	if (verts.size() != num_verts) {
+	if ((int)verts.size() != num_verts) {
 		cerr << "ERROR: provided & detected number of vertices do not match\n";
 		return -1;
 	}
