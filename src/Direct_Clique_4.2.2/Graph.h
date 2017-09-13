@@ -5,6 +5,7 @@
 #ifndef _GRAPH_H
 #define _GRAPH_H 1
 
+#include <Rcpp.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -410,6 +411,6 @@ void insert_nodes_by_name(Graph::Vertices &, const vector<string> &);
 
 // Printing Facilities
 void print_graph(Graph &);
-void print_vertices(Graph::Vertices &);
+Rcpp::StringVector print_vertices(Graph::Vertices &);
 void print_vertices_oneline(Graph::Vertices &);
 #endif

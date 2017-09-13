@@ -37,7 +37,7 @@ using namespace Rcpp;
 Graph::Vertices *find_mc(Graph *g);
 
 // [[Rcpp::export]]
-int maximal_clique(string filename)
+StringVector maximal_clique(string filename)
 {
   
   string graph_file(filename.c_str());
@@ -47,10 +47,10 @@ int maximal_clique(string filename)
   // Find maximum clique and print results
   Graph::Vertices *maximum_clique = find_mc(g);
   cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
-  print_vertices(*maximum_clique);
+  StringVector vertices = print_vertices(*maximum_clique);
   delete maximum_clique;
 
-  return 0;
+  return vertices;
 }
 
 // Main process to find a maximum clique.  Input is a graph and output is a

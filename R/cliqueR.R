@@ -21,7 +21,8 @@ maximal <- function(filename){
 	}
 	
 	sourceCpp("../src/Direct_Clique_4.2.2/clique.cpp")
-	maximal_clique(filename)
+	vertices <- maximal_clique(filename)
+	return(vertices)
 }
 
 maximal("../graphs/bio-yeast.el")

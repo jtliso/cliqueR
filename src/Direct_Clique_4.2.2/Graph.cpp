@@ -594,16 +594,20 @@ void print_graph(Graph &g)
   }
 }
 
-void print_vertices(Graph::Vertices &v)
+Rcpp::StringVector print_vertices(Graph::Vertices &v)
 {
   Graph *g = v.graph();
   Graph::Vertices::Vex_ptr p(v);
+  Rcpp::StringVector vertices;
 
   while (!p.end())
   {
-    cout << g->label(*p) << endl;
+	  string tmp = g->label(*p);
+	vertices.push_back(tmp);
+	  //Rcpp::Rcout << g->label(*p) << endl;
     ++p;
   }
+  return vertices;
 }
 
 void print_vertices_oneline(Graph::Vertices &v)
