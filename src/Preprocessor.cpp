@@ -18,7 +18,7 @@ bool Preprocessor::operator() (Graph::Vertices &mygraph, int min_clique_size,
   if (stop_criterion == NODE) size = mygraph.size();
   else size = mygraph.esize();
 
-  for (i=0; i<alg.size(); ++i)
+  for (i=0; i<(int)alg.size(); ++i)
   {
     // Version 4.2.0 - allow user to stop test at lower branches in the search
     // tree.  This is useful for interleaved preprocessors.
@@ -51,7 +51,6 @@ bool prep(Graph::Vertices &mygraph, int min_clique_size, int level, int giveup,
                                                     basic_tree *eliminated_sets)
 {
   static int depth = 0;
-  static int counter = 0;
   // if (depth == 1) cerr << ++counter << endl;
   if (level < 0) return 1;
   if (level == 0) return test_fun(mygraph, min_clique_size);

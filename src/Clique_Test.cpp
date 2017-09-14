@@ -34,7 +34,7 @@ int Lazy_Color_Test::num_colors(const Graph::Vertices &v, int node) const
   node_nbrs.insert(node);
   node_nbrs.sorted_nodes_vector(node_nbr_list);
 
-  for (i=0; i<node_nbr_list.size(); ++i)
+  for (i=0; i<(int)node_nbr_list.size(); ++i)
   {
     colors_found.set(node2color[node_nbr_list[i]]);
   }
@@ -47,7 +47,7 @@ int Lazy_Match_Test::compute_anti_match_size(const Graph::Vertices &v) const
   int i;
   int num_matches = 0;
 
-  for (i=0; i<matches.size(); i += 2)
+  for (i=0; i<(int)matches.size(); i += 2)
   {
     if (!(v.in_set(matches[i]))) continue;
     if (!(v.in_set(matches[i+1]))) continue;
