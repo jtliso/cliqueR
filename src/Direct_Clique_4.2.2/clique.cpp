@@ -19,8 +19,10 @@
 // is used only in this file and is clearly marked with SVP comments (Serial
 // Versus Parallel comments).
 
+#include <Rcpp.h>
 #include <iostream>
 #include <sys/time.h>
+#include <string>
 #include "Graph.h"
 #include "Candidate_Manager.h"
 #include "Clique_Test.h"
@@ -29,46 +31,26 @@
 #include "MC_Heuristic.h"
 #include "Brancher.h"
 
-// SVP:  Libraries for parallel version only
-#ifdef PARALLEL
-#include "PBrancher.h"
-#include "parMPI.h"
-#endif
 using namespace std;
+using namespace Rcpp;
 
 Graph::Vertices *find_mc(Graph *g);
 
-int main(int argc, char **argv)
+// [[Rcpp::export]]
+StringVector maximal_clique(string filename)
 {
-  // SVP:  Parallel initialization
-  #ifdef PARALLEL
-  par_init(&argc, &argv);
-  #endif
-
-  // Process command-line arguments
-  if (argc < 2)
-  {
-    cerr << "Usage:  " << argv[0] << " <DIMACS graph>" << endl;
-    // SVP:  For parallel version, allow parallel library to properly exit
-    #ifdef PARALLEL
-    par_exit();
-    #endif
-    exit(EXIT_SUCCESS);
-  }
-  string graph_file(argv[1]);
+  
+  string graph_file(filename.c_str());
   Graph *g = new Graph(graph_file);
   g->sort_by_degree_asc();
 
   // Find maximum clique and print results
   Graph::Vertices *maximum_clique = find_mc(g);
   cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
-  print_vertices(*maximum_clique);
+  StringVector vertices = print_vertices(*maximum_clique);
   delete maximum_clique;
 
-  // SVP:  For parallel version, allow parallel library to properly exit
-  #ifdef PARALLEL
-  par_exit();
-  #endif
+  return vertices;
 }
 
 // Main process to find a maximum clique.  Input is a graph and output is a
