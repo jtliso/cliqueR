@@ -18,10 +18,10 @@ int find_large_anti_match(const Graph::Vertices &v, vector<int> *matches)
   {
     FOUND = 0;
 
-    for (i=0; i<nodes.size(); ++i)
+    for (i=0; i<(int)nodes.size(); ++i)
     {
       if (nodes[i] < 0) continue;
-      for (j=i+1; j<nodes.size(); ++j)
+      for (j=i+1; j<(int)nodes.size(); ++j)
       {
         if (nodes[j] < 0) continue;
         if (!(g->connected(nodes[i], nodes[j])))

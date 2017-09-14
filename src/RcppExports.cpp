@@ -5,20 +5,32 @@
 
 using namespace Rcpp;
 
-// max_clique_cpp
-List max_clique_cpp(string graph_file);
-RcppExport SEXP _cliqueR_max_clique_cpp(SEXP graph_fileSEXP) {
+// maximum_clique
+StringVector maximum_clique(std::string filename);
+RcppExport SEXP _cliqueR_maximum_clique(SEXP filenameSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;
     Rcpp::RNGScope rcpp_rngScope_gen;
-    Rcpp::traits::input_parameter< string >::type graph_file(graph_fileSEXP);
-    rcpp_result_gen = Rcpp::wrap(max_clique_cpp(graph_file));
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    rcpp_result_gen = Rcpp::wrap(maximum_clique(filename));
+    return rcpp_result_gen;
+END_RCPP
+}
+// format_checker
+int format_checker(std::string file);
+RcppExport SEXP _cliqueR_format_checker(SEXP fileSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type file(fileSEXP);
+    rcpp_result_gen = Rcpp::wrap(format_checker(file));
     return rcpp_result_gen;
 END_RCPP
 }
 
 static const R_CallMethodDef CallEntries[] = {
-    {"_cliqueR_max_clique_cpp", (DL_FUNC) &_cliqueR_max_clique_cpp, 1},
+    {"_cliqueR_maximum_clique", (DL_FUNC) &_cliqueR_maximum_clique, 1},
+    {"_cliqueR_format_checker", (DL_FUNC) &_cliqueR_format_checker, 1},
     {NULL, NULL, 0}
 };
 

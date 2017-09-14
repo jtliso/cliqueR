@@ -10,7 +10,7 @@ void Candidate_Manager::init(Graph::Vertices *v, int min_clique_size,
 int Candidate_Manager::next(Graph::Vertices *v, int min_clique_size,
                                                     Graph::Vertices *clique)
 {
-  for (; next_cand != cand_list.size(); ++next_cand)
+  for (; next_cand != (int)cand_list.size(); ++next_cand)
          if (v->in_set(cand_list[next_cand])) return cand_list[next_cand++];
   return -1;
 }
@@ -171,7 +171,7 @@ int Lazy_High_Color_Man::next(Graph::Vertices *v, int min_clique_size,
 {
   int cand;
 
-  for (; next_cand < my_cand_list.size(); ++next_cand)
+  for (; next_cand < (int)my_cand_list.size(); ++next_cand)
   {
     cand = my_cand_list[next_cand];
     if (v->in_set(cand))

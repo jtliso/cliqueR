@@ -7,7 +7,7 @@ int count_ones(unsigned long ul)
   int bitcount = 0;
   unsigned char *byte = (unsigned char *)&ul;
 
-  for (i=0; i<sizeof(unsigned long); ++i)
+  for (i=0; i<(int)sizeof(unsigned long); ++i)
   {
     bitcount += ones_array[*byte];
     ++byte;

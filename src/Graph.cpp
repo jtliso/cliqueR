@@ -409,7 +409,7 @@ void Graph::shrink(int maxn)
   // Create mapping of old node numbers to new node numbers
   int next_id = 0;
   for (i=0; i<max_nodes; ++i) if (used_nodes[i]) old2new[i] = next_id++;
-  if (old2new.size() != num_nodes)
+  if ((int)old2new.size() != num_nodes)
   {
     cerr << "Error - internal consistency error in Graph::shrink()" << endl;
     exit(EXIT_FAILURE);
@@ -442,7 +442,7 @@ void Graph::shrink(int maxn)
   }
 
   // Fix node_order to use new node numbers
-  for (i=0; i<node_order.size(); ++i)
+  for (i=0; i<(int)node_order.size(); ++i)
   {
     if (used_nodes[node_order[i]])
     {
@@ -461,7 +461,6 @@ void Graph::shrink(int maxn)
 
 void Graph::Vertices::node_array(vector<int> &dest) const
 {
-  int i;
   dest.clear();
   Vex_ptr vp(*this);
 
@@ -470,7 +469,6 @@ void Graph::Vertices::node_array(vector<int> &dest) const
 
 void Graph::Vertices::node_list(list<int> &dest) const
 {
-  int i;
   dest.clear();
   Vex_ptr vp(*this);
 
@@ -512,7 +510,7 @@ void Graph::Vertices::pack(unsigned *packet) const
   for (i=0; i<array_size; i++)
   {
     packet[i] = 0;
-    for (j=0; j<8*sizeof(unsigned); j++)
+    for (j=0; j<(int)(8*sizeof(unsigned)); j++)
     {
       packet[i] <<= 1;
       if (v[bit_num]) packet[i]++;
@@ -538,12 +536,12 @@ void Graph::Vertices::unpack(const unsigned *packet)
   unsigned bit_field;
   unsigned first_bit_tester = 1;
 
-  for (i=1; i<8*sizeof(unsigned); i++) first_bit_tester <<= 1;
+  for (i=1; i<(int)(8*sizeof(unsigned)); i++) first_bit_tester <<= 1;
   clear();
   for (i=0; i<array_size; i++)
   {
     bit_field = packet[i];
-    for (j=0; j<8*sizeof(unsigned); j++)
+    for (j=0; j<(int)(8*sizeof(unsigned)); j++)
     {
       if ((bit_field & first_bit_tester) > 0) v.set(bit_num);
       bit_field <<= 1;
@@ -571,7 +569,7 @@ void insert_nodes_by_name(Graph::Vertices &v, const vector<string> &names)
   int i;
   Graph *g = v.graph();
 
-  for (i=0; i<names.size(); ++i) v.insert(g->vertex(names[i]));
+  for (i=0; i<(int)names.size(); ++i) v.insert(g->vertex(names[i]));
 }
 
 // Printing facilities
@@ -596,16 +594,20 @@ void print_graph(Graph &g)
   }
 }
 
-void print_vertices(Graph::Vertices &v)
+Rcpp::StringVector print_vertices(Graph::Vertices &v)
 {
   Graph *g = v.graph();
   Graph::Vertices::Vex_ptr p(v);
+  Rcpp::StringVector vertices;
 
   while (!p.end())
   {
-    cout << g->label(*p) << endl;
+    string tmp = g->label(*p);
+	vertices.push_back(tmp);
+	//Rcpp::Rcout << g->label(*p) << endl;
     ++p;
   }
+  return vertices;
 }
 
 void print_vertices_oneline(Graph::Vertices &v)
