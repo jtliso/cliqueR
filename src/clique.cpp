@@ -19,10 +19,9 @@
 // is used only in this file and is clearly marked with SVP comments (Serial
 // Versus Parallel comments).
 
-#include <Rcpp.h>
 #include <iostream>
 #include <sys/time.h>
-#include <string>
+#include <Rcpp.h>
 #include "Graph.h"
 #include "Candidate_Manager.h"
 #include "Clique_Test.h"
@@ -31,26 +30,52 @@
 #include "MC_Heuristic.h"
 #include "Brancher.h"
 
+// SVP:  Libraries for parallel version only
+/*#ifdef PARALLEL
+#include "PBrancher.h"
+#include "parMPI.h"
+#endif*/
+
 using namespace std;
 using namespace Rcpp;
 
 Graph::Vertices *find_mc(Graph *g);
+List rlist_from_vertices(Graph::Vertices &v);
 
 // [[Rcpp::export]]
-StringVector maximal_clique(string filename)
+List max_clique_cpp(string graph_file)
 {
-  
-  string graph_file(filename.c_str());
+  // SVP:  Parallel initialization
+  /*#ifdef PARALLEL
+  par_init(&argc, &argv);
+  #endif*/
+
+  // Process command-line arguments
+  /*if (argc < 2)
+  {
+    //cerr << "Usage:  " << argv[0] << " <DIMACS graph>" << endl;
+    // SVP:  For parallel version, allow parallel library to properly exit
+    #ifdef PARALLEL
+    par_exit();
+    #endif
+    exit(EXIT_SUCCESS);
+  }*/
+  //string graph_file(argv[1]);
   Graph *g = new Graph(graph_file);
   g->sort_by_degree_asc();
 
   // Find maximum clique and print results
   Graph::Vertices *maximum_clique = find_mc(g);
   cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
-  StringVector vertices = print_vertices(*maximum_clique);
+  //print_vertices(*maximum_clique);
+  maximum_clique_rlist = rlist_from_vertices(*maximum_clique);
   delete maximum_clique;
-
-  return vertices;
+  return maximum_clique_rlist;
+	
+  // SVP:  For parallel version, allow parallel library to properly exit
+  /*#ifdef PARALLEL
+  par_exit();
+  #endif*/
 }
 
 // Main process to find a maximum clique.  Input is a graph and output is a
@@ -64,10 +89,10 @@ Graph::Vertices *find_mc(Graph *g)
   int mc_size;
 
   // SVP:  Process needs rank for parallel version
-  #ifdef PARALLEL
+  /*#ifdef PARALLEL
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
-  #endif
+  #endif*/
 
   // Variables for timing
   double start_time;
@@ -76,11 +101,11 @@ Graph::Vertices *find_mc(Graph *g)
   #define COMPUTE_SYS_TIME ((double)tval.tv_sec + ((double)tval.tv_usec)/1000000.0)
 
   // SVP:  For parallel version, only rank 0 prints benchmarks
-  #ifdef PARALLEL
+  /*#ifdef PARALLEL
   #define BENCHMARK gettimeofday(&tval, &tzval); if (rank == 0) cerr << COMPUTE_SYS_TIME - start_time << ":  "
   #else
   #define BENCHMARK gettimeofday(&tval, &tzval); cerr << COMPUTE_SYS_TIME - start_time << ":  "
-  #endif
+  #endif*/
 
   // Start timing
   gettimeofday(&tval, &tzval);
@@ -121,11 +146,11 @@ Graph::Vertices *find_mc(Graph *g)
   BENCHMARK << "Branching" << endl;
 
   // SVP:  Branching class (but not interface) differs for parallel version
-  #ifdef PARALLEL
+  /*#ifdef PARALLEL
   PBrancher branch(1);
   #else
   Brancher branch;
-  #endif
+  #endif*/
 
   Prep_Low_Degree_Man pldm;
   branch.set_cand_man(&pldm);
@@ -135,3 +160,19 @@ Graph::Vertices *find_mc(Graph *g)
   BENCHMARK << "Finish" << endl;
   return maximum_clique;
 }
+
+List r_list_from_vertices(Graph::Vertices &v)
+{
+  Graph *g = v.graph();
+  Graph::Vertices::Vex_ptr p(v);
+  List vert_list(v.size());
+  int i = 0;
+  while (!p.end())
+  {
+    vert_list.[i] = g->label(*p);
+    ++p;
+	i++
+  }
+  return vert_list;
+}
+

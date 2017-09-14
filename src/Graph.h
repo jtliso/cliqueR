@@ -5,7 +5,6 @@
 #ifndef _GRAPH_H
 #define _GRAPH_H 1
 
-#include <Rcpp.h>
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -137,7 +136,7 @@ class Graph
     // Basic Operations
     Vex_ptr &operator++()
     {
-      for (i=i+1; i<(int)g->node_order.size(); i++)
+      for (i=i+1; i<g->node_order.size(); i++)
                              if (g->used_nodes[g->node_order[i]]) break;
       return *this;
     }
@@ -153,7 +152,7 @@ class Graph
     // Handy functions
     void goto_first() {i=-1; ++(*this);}
     void goto_last() {i=g->node_order.size(); --(*this);}
-    bool end() const {return i >= (int)g->node_order.size();}
+    bool end() const {return i >= g->node_order.size();}
     bool begin() const {return i < 0;}
 
     friend class Graph;
@@ -232,7 +231,7 @@ class Graph
       int next_node = 0;
 
       vec.resize(v.count());
-      for (i=0; i<(int)g->node_order.size(); ++i)
+      for (i=0; i<g->node_order.size(); ++i)
       {
         if (v[g->node_order[i]])
         {
@@ -247,7 +246,7 @@ class Graph
       int i;
       l.clear();
 
-      for (i=0; i<(int)g->node_order.size(); ++i)
+      for (i=0; i<g->node_order.size(); ++i)
       {
         if (v[g->node_order[i]]) l.push_back(g->node_order[i]);
       }
@@ -411,6 +410,6 @@ void insert_nodes_by_name(Graph::Vertices &, const vector<string> &);
 
 // Printing Facilities
 void print_graph(Graph &);
-Rcpp::StringVector print_vertices(Graph::Vertices &);
+void print_vertices(Graph::Vertices &);
 void print_vertices_oneline(Graph::Vertices &);
 #endif
