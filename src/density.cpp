@@ -14,7 +14,7 @@ void read_subgraphs(Graph *, vector<Graph::Vertices *> &, char *);
 double compute_density(Graph::Vertices *);
 void split_string(string &, vector<string> &);
 
-main(int argc, char **argv)
+int main(int argc, char **argv)
 {
   int i;
   vector<Graph::Vertices *> subgraphs;
@@ -28,7 +28,7 @@ main(int argc, char **argv)
   Graph g(graph_file);
 
   read_subgraphs(&g, subgraphs, argv[2]);
-  for (i=0; i<subgraphs.size(); ++i)
+  for (i=0; i<(int)subgraphs.size(); ++i)
               cout << i << ":  " << compute_density(subgraphs[i]) << endl;
 }
 

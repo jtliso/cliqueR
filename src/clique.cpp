@@ -46,7 +46,7 @@ StringVector maximum_clique(std::string filename)
 
   // Find maximum clique and print results
   Graph::Vertices *maximum_clique = find_mc(g);
-  cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
+  //cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
   StringVector vertices = print_vertices(*maximum_clique);
   delete maximum_clique;
 
@@ -65,7 +65,7 @@ Graph::Vertices *find_mc(Graph *g)
 
 
   // Variables for timing
-  double start_time;
+  //double start_time;
   struct timeval tval;
   struct timezone tzval;
   #define COMPUTE_SYS_TIME ((double)tval.tv_sec + ((double)tval.tv_usec)/1000000.0)
@@ -73,7 +73,7 @@ Graph::Vertices *find_mc(Graph *g)
 
   // Start timing
   gettimeofday(&tval, &tzval);
-  start_time = COMPUTE_SYS_TIME;
+  //start_time = COMPUTE_SYS_TIME;
 
   // Run heuristic to find lower bound
   //BENCHMARK << "Applying heuristic" << endl;
