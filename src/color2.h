@@ -10,7 +10,7 @@
 #ifndef _COLORING_H
 #define _COLORING_H 1
 
-#include "Graph.h"
+#include "Graph2.h"
 using namespace std;
 
 // This function greedily colors the given nodes in subgraph sg in REVERSE

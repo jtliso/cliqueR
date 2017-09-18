@@ -11,8 +11,8 @@
 #include <algorithm>
 #include <vector>
 #include <list>
-#include "Graph.h"
-#include "color.h"
+#include "Graph2.h"
+#include "color2.h"
 using namespace std;
 
 // Basic Manager - a useful, lazy default

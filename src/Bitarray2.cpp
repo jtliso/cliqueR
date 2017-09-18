@@ -1,4 +1,4 @@
-#include "Bitarray.h"
+#include "Bitarray2.h"
 
 bool bitarray::operator[] (int b) const
 {

@@ -1,4 +1,4 @@
-#include "Preprocessor.h"
+#include "Preprocessor2.h"
 
 bool Preprocessor::operator() (Graph &mygraph, int min_clique_size)
 {

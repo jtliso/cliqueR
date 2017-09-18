@@ -1,4 +1,4 @@
-#include "Candidate_Manager.h"
+#include "Candidate_Manager2.h"
 
 void Candidate_Manager::init(Graph::Vertices *v, int min_clique_size,
                                                      Graph::Vertices *clique)

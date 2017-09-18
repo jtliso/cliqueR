@@ -10,7 +10,7 @@
 #ifndef _DEGREE_PREPROCESSOR_H
 #define _DEGREE_PREPROCESSOR_H 1
 
-#include "Graph.h"
+#include "Graph2.h"
 using namespace std;
 
 int Degree_Preprocessor(Graph::Vertices &mygraph, Graph::Vertices &clique,

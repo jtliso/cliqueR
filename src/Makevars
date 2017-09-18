@@ -1,0 +1,4 @@
+CXXFLAGS = -fPIC -O3
+PKG_CXXFLAGS = -fPIC -O3
+
+all: $(SHLIB)

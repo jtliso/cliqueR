@@ -1,4 +1,4 @@
-#include "color.h"
+#include "color2.h"
 
 int color_subgraph(const Graph::Vertices &sg, vector<int> *node2color,
                                               vector<int> *sorted_nodes)
