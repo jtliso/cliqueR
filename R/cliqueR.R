@@ -30,3 +30,17 @@ cliqueR.maximum <- function(filename, sizeOnly=FALSE) {
 	return(vertices)
 }
 
+#finds paracliques
+cliqueR.paraclique <- function(filename, igf, min_mc_size, min_pc_size, max_num_pcs){
+  #checking the format of the file
+  res <- formatter(filename)
+  
+  #exiting on error
+  if(res == -1){
+    return(res)
+  }
+  
+  vertices <- find_paracliques(filename, igf, min_mc_size, min_pc_size, max_num_pcs)
+  
+  return(vertices)
+}

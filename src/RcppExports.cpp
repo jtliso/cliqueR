@@ -27,10 +27,26 @@ BEGIN_RCPP
     return rcpp_result_gen;
 END_RCPP
 }
+// find_paracliques
+int find_paracliques(std::string filename, double igf, int min_mc_size, int min_pc_size, int max_num_pcs);
+RcppExport SEXP _cliqueR_find_paracliques(SEXP filenameSEXP, SEXP igfSEXP, SEXP min_mc_sizeSEXP, SEXP min_pc_sizeSEXP, SEXP max_num_pcsSEXP) {
+BEGIN_RCPP
+    Rcpp::RObject rcpp_result_gen;
+    Rcpp::RNGScope rcpp_rngScope_gen;
+    Rcpp::traits::input_parameter< std::string >::type filename(filenameSEXP);
+    Rcpp::traits::input_parameter< double >::type igf(igfSEXP);
+    Rcpp::traits::input_parameter< int >::type min_mc_size(min_mc_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type min_pc_size(min_pc_sizeSEXP);
+    Rcpp::traits::input_parameter< int >::type max_num_pcs(max_num_pcsSEXP);
+    rcpp_result_gen = Rcpp::wrap(find_paracliques(filename, igf, min_mc_size, min_pc_size, max_num_pcs));
+    return rcpp_result_gen;
+END_RCPP
+}
 
 static const R_CallMethodDef CallEntries[] = {
     {"_cliqueR_maximum_clique", (DL_FUNC) &_cliqueR_maximum_clique, 1},
     {"_cliqueR_format_checker", (DL_FUNC) &_cliqueR_format_checker, 1},
+    {"_cliqueR_find_paracliques", (DL_FUNC) &_cliqueR_find_paracliques, 5},
     {NULL, NULL, 0}
 };
 
