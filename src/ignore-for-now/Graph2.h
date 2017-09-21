@@ -12,7 +12,7 @@
 #include <list>
 #include <map>
 #include <algorithm>
-#include "Bitarray.h"
+#include "Bitarray2.h"
 using namespace std;
 
 class Graph

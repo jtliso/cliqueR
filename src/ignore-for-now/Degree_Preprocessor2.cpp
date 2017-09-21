@@ -1,4 +1,4 @@
-#include "Degree_Preprocessor.h"
+#include "Degree_Preprocessor2.h"
 
 int Degree_Preprocessor(Graph::Vertices &mygraph, Graph::Vertices &clique,
                                                                int *ldnode)

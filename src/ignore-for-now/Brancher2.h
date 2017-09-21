@@ -8,11 +8,11 @@
 #define _BRANCHER_H 1
 
 #include <iostream>
-#include "Graph.h"
-#include "Candidate_Manager.h"
-#include "Clique_Test.h"
-#include "Preprocessor.h"
-#include "Degree_Preprocessor.h"
+#include "Graph2.h"
+#include "Candidate_Manager2.h"
+#include "Clique_Test2.h"
+#include "Preprocessor2.h"
+#include "Degree_Preprocessor2.h"
 using namespace std;
 
 class Brancher

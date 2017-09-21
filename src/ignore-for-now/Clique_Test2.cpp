@@ -1,4 +1,4 @@
-#include "Clique_Test.h"
+#include "Clique_Test2.h"
 
 bool Edge_Test::operator() (const Graph::Vertices &v, int min_size, int node)
                                                                         const

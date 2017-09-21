@@ -1,4 +1,4 @@
-#include "MC_Heuristic.h"
+#include "MC_Heuristic2.h"
 
 int Greedy_Clique::operator() (Graph::Vertices &subgraph,
                                                Graph::Vertices &clique) const

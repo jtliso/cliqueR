@@ -11,7 +11,7 @@
 #ifndef _MC_HEURISTIC_H
 #define _MC_HEURISTIC_H 1
 
-#include "Graph.h"
+#include "Graph2.h"
 using namespace std;
 
 class MC_Heuristic

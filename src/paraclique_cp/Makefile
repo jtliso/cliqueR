@@ -1,6 +1,6 @@
 CC = g++
 CFLAGS = -O3
-OBJS = Bitarray.o Brancher.o Candidate_Manager.o Clique_Test.o Degree_Preprocessor.o Graph.o MC_Heuristic.o Preprocessor.o bit_counters.o color.o paracl.o
+OBJS = Bitarray2.o Brancher2.o Candidate_Manager2.o Clique_Test2.o Degree_Preprocessor2.o Graph2.o MC_Heuristic2.o Preprocessor2.o bit_counters2.o color2.o paracl.o
 EXECUTABLES = paracl_cp
 
 .SUFFIXES: .cpp .o

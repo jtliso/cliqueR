@@ -60,14 +60,14 @@ int format_checker(std::string file) {
 		
 		//check for multiple tabs on a line
 		if (line.npos != line.find("\t",tab+1)) {
-			cerr << "ERROR line " << ln_num << ": labels cannot contain tabs\n";
+			Rcerr << "ERROR line " << ln_num << ": labels cannot contain tabs\n";
 			infile.close();
 			return -1;
 		}
 
 		//check that edge is not a pair of itself
 		if(L1 == L2){
-			cerr << "ERROR line " << ln_num << ": edges cannot be to and from same vertex\n";
+			Rcerr << "ERROR line " << ln_num << ": edges cannot be to and from same vertex\n";
 			infile.close();
 			return -1;
 		}
@@ -80,7 +80,7 @@ int format_checker(std::string file) {
 		pair<map<string,int>::iterator, bool> ret;
 		ret = edges.insert(make_pair(L1+"\t"+L2, ln_num));
 		if (!ret.second || !edges.insert(make_pair(L2+"\t"+L1, ln_num)).second) {
-			cerr << "ERROR line " << ln_num << ": this edge is a duplicate of line " << ret.first->second << endl;
+			Rcerr << "ERROR line " << ln_num << ": this edge is a duplicate of line " << ret.first->second << endl;
 			infile.close();
 			return -1;
 		}
@@ -90,14 +90,13 @@ int format_checker(std::string file) {
 	infile.close();
 
 	if (ln_num != num_edges+2) {
-		cerr << "ERROR: provided & detected number of edges do not match\n";
+		Rcerr << "ERROR: provided & detected number of edges do not match\n";
 		return -1;
 	}
 	if ((int)verts.size() != num_verts) {
-		cerr << "ERROR: provided & detected number of vertices do not match\n";
+		Rcerr << "ERROR: provided & detected number of vertices do not match\n";
 		return -1;
 	}
 
-	cout << fname << " is formatted correctly for use with cliqueR\n";
 	return 0;
 }

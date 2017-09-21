@@ -2,15 +2,16 @@
 // September 10, 2007
 // Original nonoverlapping paraclique
 
+#include <Rcpp.h>
 #include <iostream>
 #include <sys/time.h>
-#include "Graph2.h"
-#include "Candidate_Manager2.h"
-#include "Clique_Test2.h"
-#include "Preprocessor2.h"
-#include "Degree_Preprocessor2.h"
-#include "MC_Heuristic2.h"
-#include "Brancher2.h"
+#include "Graph.h"
+#include "Candidate_Manager.h"
+#include "Clique_Test.h"
+#include "Preprocessor.h"
+#include "Degree_Preprocessor.h"
+#include "MC_Heuristic.h"
+#include "Brancher.h"
 #include "paracl.h"
 #include <cstdlib>
 
@@ -20,19 +21,21 @@
 #include "parMPI.h"
 #endif
 using namespace std;
+using namespace Rcpp;
 
-Graph::Vertices *find_mc(Graph *g);
+Graph::Vertices *find_mc2(Graph *g);
 
-int main(int argc, char **argv)
+// [[Rcpp::export]]
+int find_paracliques(std::string filename, double igf, int min_mc_size, int min_pc_size, int max_num_pcs)
 {
   int i;
   Graph::Vertices *maximum_clique;
 
   // Paraclique parameters
-  double igf;
-  int min_mc_size;
-  int min_pc_size;
-  int max_num_pcs;
+  //double igf;
+  //int min_mc_size;
+  //int min_pc_size;
+  //int max_num_pcs;
 
   
   // SVP:  Parallel initialization
@@ -40,30 +43,21 @@ int main(int argc, char **argv)
   par_init(&argc, &argv);
   #endif
 
-  // Process command-line arguments
-  if (argc < 6)
-  {
-    cerr << "Usage:  " << argv[0] << " <DIMACS graph> <igf> <Min. maximum clique size> <Min. paraclique size> <Max. no. paracliques>" << endl;
-    // SVP:  For parallel version, allow parallel library to properly exit
-    #ifdef PARALLEL
-    par_exit();
-    #endif
-    exit(EXIT_SUCCESS);
-  }
-  string graph_file(argv[1]);
+
+  string graph_file(filename);
   Graph *g = new Graph(graph_file);
   Graph::Vertices paraclique(*g);
-  igf = atof(argv[2]); 
-  min_mc_size = max(3, atoi(argv[3]));
-  min_pc_size = max(3, atoi(argv[4]));
-  max_num_pcs = atoi(argv[5]);
+  //igf = atof(argv[2]); 
+  min_mc_size = max(3, min_mc_size);
+  min_pc_size = max(3, min_pc_size);
+//  max_num_pcs = atoi(argv[5]);
   if (max_num_pcs <= 0) max_num_pcs = g->size();
 
   for (i=0; i<max_num_pcs; ++i)
   {
     // Use copy of graph for finding maximum clique (find_mc is destructive)
     Graph g_copy(*g);
-    maximum_clique = find_mc(&g_copy);
+    maximum_clique = find_mc2(&g_copy);
     cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
     if (maximum_clique->size() < min_mc_size) break;
  
@@ -79,11 +73,12 @@ int main(int argc, char **argv)
     print_vertices_oneline(paraclique);
     g->remove(paraclique);
   }
-
+  return 0;
+  
   // SVP:  For parallel version, allow parallel library to properly exit
-  #ifdef PARALLEL
-  par_exit();
-  #endif
+  //#ifdef PARALLEL
+  //par_exit();
+  //#endif
 }
 
 // Main process to find a maximum clique.  Input is a graph and output is a
@@ -92,7 +87,7 @@ int main(int argc, char **argv)
 // multiple MCs during a single run.
 
 // WARNING:  Input graph is altered!
-Graph::Vertices *find_mc(Graph *g)
+Graph::Vertices *find_mc2(Graph *g)
 {
   int mc_size;
 

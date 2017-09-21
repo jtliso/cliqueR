@@ -1,3 +1,7 @@
 src/*/*.o
 .Rproj.user
 src/*.o
+src/*.dll
+.Rhistory
+.RData
+.Ruserdata

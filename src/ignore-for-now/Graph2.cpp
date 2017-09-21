@@ -1,4 +1,4 @@
-#include "Graph.h"
+#include "Graph2.h"
 
 // Construct graph without a file.  Create an edgeless graph with init_size
 // nodes and capacity max_size.

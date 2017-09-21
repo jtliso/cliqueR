@@ -8,7 +8,7 @@
 
 #include <iostream>
 #include <cstdlib>
-#include "bit_counters.h"
+#include "bit_counters2.h"
 #include <cstring>
 using namespace std;
 

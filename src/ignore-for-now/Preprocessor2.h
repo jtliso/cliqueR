@@ -15,10 +15,10 @@
 #include <list>
 #include <algorithm>
 #include <sys/time.h>
-#include "Graph.h"
-#include "Basic_tree.h"
-#include "Clique_Test.h"
-#include "Candidate_Manager.h"
+#include "Graph2.h"
+#include "Basic_tree2.h"
+#include "Clique_Test2.h"
+#include "Candidate_Manager2.h"
 using namespace std;
 
 bool prep(Graph::Vertices &mygraph, int min_clique_size, int level,

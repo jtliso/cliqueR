@@ -10,8 +10,8 @@
 #define _CLIQUE_TEST_H 1
 
 #include <map>
-#include "Graph.h"
-#include "color.h"
+#include "Graph2.h"
+#include "color2.h"
 using namespace std;
 
 class Clique_Test

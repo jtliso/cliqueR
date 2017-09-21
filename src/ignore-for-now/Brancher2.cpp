@@ -1,4 +1,4 @@
-#include "Brancher.h"
+#include "Brancher2.h"
 
 int Brancher::operator() (Graph &mygraph, Graph::Vertices &maximum_clique) const
 {
