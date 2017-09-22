@@ -1,0 +1,13 @@
+source("/Users/shan/Documents/GitHub/cliqueR/R/cliqueR.R")
+install Rcpp
+;
+install.packages("Rcpp")
+source("/Users/shan/Documents/GitHub/cliqueR/R/cliqueR.R")
+ls()
+ls()
+ls()
+clear
+clear()
+source("/Users/shan/Documents/GitHub/cliqueR/R/cliqueR.R")
+source("/Users/shan/Documents/GitHub/cliqueR/R/cliqueR.R")
+source("/Users/shan/Documents/GitHub/cliqueR/R/cliqueR.R")
