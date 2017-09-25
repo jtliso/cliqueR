@@ -18,12 +18,14 @@
 
 using namespace std;
 using namespace Rcpp;
+using std::vector;
 
 // [[Rcpp::export]]
-int find_paracliques(std::string filename, double igf, int min_mc_size, int min_pc_size, int max_num_pcs)
+std::vector<std::vector<std::string> > find_paracliques(std::string filename, double igf, int min_mc_size, int min_pc_size, int max_num_pcs)
 {
   int i;
   Graph::Vertices *maximum_clique;
+  std::vector< std::vector<string> > paracliques;
 
  
   // SVP:  Parallel initialization
@@ -46,7 +48,7 @@ int find_paracliques(std::string filename, double igf, int min_mc_size, int min_
     // Use copy of graph for finding maximum clique (find_mc is destructive)
     Graph g_copy(*g);
     maximum_clique = find_mc(&g_copy);
-    cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
+    //cerr << "Maximum clique size is:  " << maximum_clique->size() << endl;
     if (maximum_clique->size() < min_mc_size) break;
  
     // Extract results
@@ -58,10 +60,10 @@ int find_paracliques(std::string filename, double igf, int min_mc_size, int min_
     build_paracl(*g, paraclique, igf);
     if (paraclique.size() < min_pc_size) break;
 
-    print_vertices_oneline(paraclique);
+    paracliques.push_back(print_vertices_oneline(paraclique));
     g->remove(paraclique);
   }
-  return 0;
+  return paracliques;
   
   /* SVP:  For parallel version, allow parallel library to properly exit
   #ifdef PARALLEL
