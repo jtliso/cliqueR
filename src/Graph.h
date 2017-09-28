@@ -15,6 +15,7 @@
 #include <algorithm>
 #include "Bitarray.h"
 using namespace std;
+using std::vector;
 
 class Graph
 {
@@ -412,5 +413,5 @@ void insert_nodes_by_name(Graph::Vertices &, const vector<string> &);
 // Printing Facilities
 void print_graph(Graph &);
 Rcpp::StringVector print_vertices(Graph::Vertices &);
-void print_vertices_oneline(Graph::Vertices &);
+std::vector<std::string> print_vertices_oneline(Graph::Vertices &);
 #endif

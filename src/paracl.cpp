@@ -9,7 +9,7 @@ void build_paracl(Graph &g, Graph::Vertices &v, double glom)
   all_nodes.node_array(nodes);
   Graph::Vertices new_members(g);
 
-  cerr << "glom is " << glom << endl;
+  //cerr << "glom is " << glom << endl;
 
 //  do           //comment in this loop to do layered paraclique
 //  {
@@ -28,7 +28,7 @@ void build_paracl(Graph &g, Graph::Vertices &v, double glom)
           if (percent >= glom)
           {    
             new_members.insert(nodes[i]);
-            cerr << "vertex is connected to " << percent << "% of vertices in clique, adding to paraclique\n";
+            //cerr << "vertex is connected to " << percent << "% of vertices in clique, adding to paraclique\n";
           }        
           //else              
             //cerr << " vertex not added to paraclique\n";
@@ -36,7 +36,7 @@ void build_paracl(Graph &g, Graph::Vertices &v, double glom)
       }
     }
     v.insert(new_members);
-    cerr << "Added " << new_members.size() << " for a paraclique of size " << v.size() << endl;
+    //cerr << "Added " << new_members.size() << " for a paraclique of size " << v.size() << endl;
 //  } while (new_members.size() > 0);
 
 }
@@ -63,6 +63,6 @@ void build_acc_paracl(Graph &g, Graph::Vertices &v, int agg_factor)
     }
     v.insert(new_members);
     ++glom;
-    cerr << "Added " << new_members.size() << " for a paraclique of size " << v.size() << endl;
+    //cerr << "Added " << new_members.size() << " for a paraclique of size " << v.size() << endl;
   } while (agg_factor * glom <= v.size());
 }

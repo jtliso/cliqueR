@@ -28,7 +28,7 @@ BEGIN_RCPP
 END_RCPP
 }
 // find_paracliques
-int find_paracliques(std::string filename, double igf, int min_mc_size, int min_pc_size, int max_num_pcs);
+std::vector<std::vector<std::string> > find_paracliques(std::string filename, double igf, int min_mc_size, int min_pc_size, int max_num_pcs);
 RcppExport SEXP _cliqueR_find_paracliques(SEXP filenameSEXP, SEXP igfSEXP, SEXP min_mc_sizeSEXP, SEXP min_pc_sizeSEXP, SEXP max_num_pcsSEXP) {
 BEGIN_RCPP
     Rcpp::RObject rcpp_result_gen;

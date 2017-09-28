@@ -610,19 +610,23 @@ Rcpp::StringVector print_vertices(Graph::Vertices &v)
   return vertices;
 }
 
-void print_vertices_oneline(Graph::Vertices &v)
+std::vector<std::string> print_vertices_oneline(Graph::Vertices &v)
 {
   Graph *g = v.graph();
   Graph::Vertices::Vex_ptr p(v);
+  std::vector<std::string> verts;
 
-  if (v.size() == 0) return;
+  if (v.size() == 0) return verts;
 
-  cout << g->label(*p);
+  //cout << g->label(*p);
+  verts.push_back(g->label(*p));
   ++p;
   while (!p.end())
   {
-    cout << "\t" << g->label(*p);
+    //cout << "\t" << g->label(*p);
+    verts.push_back(g->label(*p));
     ++p;
   }
-  cout << endl;
+  //cout << endl;
+  return verts;
 }
