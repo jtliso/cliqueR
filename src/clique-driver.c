@@ -36,68 +36,58 @@
 
 /* Global variables */
 extern int LB,UB;  // lower bound and upper bound of clique size
-extern int PRINT;
+extern int PROFILE;
 extern int NUM_PROTECTED;
 extern int NUM_CLIQUES;
-char *outfn, infn[100];
+char infn[100];
 
 SEXP run_maximal_clique(Graph *G)
 {
-  FILE *fp1=stdout, *fp2;
-  char fname[100];
   double utime;
   unsigned int n = num_vertices(G);
   vid_t clique[n];
   vid_t vertices[n];
-  SEXP cliques = PROTECT(allocVector(VECSXP, n));
-  NUM_PROTECTED++;
+  SEXP cliques = R_NilValue;
   u64 nclique[n+1];
   int i;
-
-  if (outfn != NULL) {
-    sprintf(fname, "%s.clique", outfn);
-    fp1 = fopen(fname, "w");
-  }
-  sprintf(fname, "%s.profile", infn);
-  fp2 = fopen(fname, "w");
 
   utime = get_cur_time();
   memset(nclique, 0, (n+1)*sizeof(u64));
   memset(clique, -1, n*sizeof(vid_t));
   for (i = 0; i < n; i++) vertices[i] = i;
-  clique_find_v2(fp1, nclique, G, clique, vertices, cliques, 0, 0, n);
+  
+  if (!PROFILE) cliques = PROTECT(allocVector(VECSXP, n));
+  
+  clique_find_v2(nclique, G, clique, vertices, cliques, 0, 0, n);
   utime = get_cur_time() - utime;
 
-  clique_profile_out(fp2, nclique, G);
-  fprintf(fp2, "Time (seconds)  : %.6f\n", utime);
-
-  if (outfn != NULL) free(outfn);
-  fclose(fp1);
-  fclose(fp2);
+  if (PROFILE) {
+    cliques = clique_profile_out(nclique, G);
+    //Rprintf("Time (seconds)  : %.6f\n", utime);
+  }
   
   return cliques;
 }
 
-SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound)
+SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound, SEXP R_profile)
 {
   Graph *G;
   FILE *fp;
 
   UB = asInteger(R_upperbound); 
   LB = asInteger(R_lowerbound);
-  PRINT = 1;
-  NUM_PROTECTED = 0;
+  PROFILE = asInteger(R_profile);
   NUM_CLIQUES = 0;
   
   const char *filepath = CHARPT(R_file, 0);
   if (strlen(filepath) > 99) {
-	  REprintf("Filepath: %s is too long. Max length: 99\n", infn);
+	  REprintf("Filepath: %s is too long. Max length is 99 characters\n", infn);
 	  return R_NilValue;
   }
   strcpy(infn, filepath);
   
   if ((fp = fopen(infn, "r")) == NULL) {
-    REprintf("Can't open file %s\n", infn);
+    REprintf("Cannot open file %s\n", infn);
     return R_NilValue;
   }
   G = graph_edgelist_in(fp);
@@ -108,7 +98,7 @@ SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound)
   SEXP ret = run_maximal_clique(G);
   graph_free(G);
   
-  UNPROTECT(NUM_PROTECTED);
+  UNPROTECT(1);
   return ret;
 }
 

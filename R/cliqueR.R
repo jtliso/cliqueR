@@ -17,7 +17,7 @@ cliqueR.maximum <- function(filename, sizeOnly=FALSE) {
 	
 	#exiting on error
 	if(res == -1){
-		return(res)
+	  return(invisible(res))
 	}
 	
 	vertices <- maximum_clique(filename)
@@ -37,7 +37,7 @@ cliqueR.paraclique <- function(filename, igf=1.0, min_mc_size=5, min_pc_size=5, 
   
   #exiting on error
   if(res == -1){
-    return(res)
+    return(invisible(res))
   }
   
   vertices <- find_paracliques(filename, igf, min_mc_size, min_pc_size, max_num_pcs)
@@ -45,16 +45,18 @@ cliqueR.paraclique <- function(filename, igf=1.0, min_mc_size=5, min_pc_size=5, 
   return(vertices)
 }
 
-cliqueR.maximal <- function(filename, least=3, most=-1) {
+cliqueR.maximal <- function(filename, least=3, most=-1, profile=0) {
   #checking the format of the file
   res <- formatter(filename)
   
   #exiting on error
   if(res == -1){
-    return(res)
+    return(invisible(res))
   }
-  a = .Call("R_maximal_clique", filename, least, most)
-  #unlist(a)
+  a = .Call("R_maximal_clique", filename, least, most, profile)
+  if (is.null(a))
+    return(list())
+  
   return (a[-which(sapply(a, is.null))])
 }
 

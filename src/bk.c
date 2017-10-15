@@ -14,21 +14,8 @@
 /* Global Variables */
 int LB, UB;
 int VERSION;
-int PRINT;
-int NUM_PROTECTED;
+int PROFILE;
 int NUM_CLIQUES;
-
-/* ------------------------------------------------------------- *
- * Function: clique_out()                                        *
- * ------------------------------------------------------------- */
-void clique_out(FILE *fp, Graph *G, vid_t *clique, int len)
-{
-  int i;
-  for (i = 0; i < len-1; i++)
-	fprintf(fp, "%s\t", G->_label[clique[i]]);
-  fprintf(fp, "%s\n", G->_label[clique[i]]);
-  return;
-}
 
 /* ------------------------------------------------------------- *
  * Function: append_clique()                                     *
@@ -41,9 +28,8 @@ void append_clique(SEXP cliques, Graph *G, vid_t *clique, int len)
   for (i = 0; i < len; i++)  
 	SET_STRING_ELT(rclique, i, mkChar(G->_label[clique[i]]));
   
-  SET_VECTOR_ELT(cliques, NUM_CLIQUES++, rclique);
+  SET_VECTOR_ELT(cliques, NUM_CLIQUES, rclique);
   UNPROTECT(1);
-  //NUM_PROTECTED++;
   return;
 }
 
@@ -51,25 +37,30 @@ void append_clique(SEXP cliques, Graph *G, vid_t *clique, int len)
 /* ------------------------------------------------------------- *
  * Function: clique_profile_out()                                *
  * ------------------------------------------------------------- */
-void clique_profile_out(FILE *fp, u64 *nclique, Graph *G)
+SEXP clique_profile_out(u64 *nclique, Graph *G)
 {
   unsigned int n = G->_num_vertices;
-  u64 sum=0;
-  int max=0;
-  int i;
-  fprintf(fp, "Size\tNumber\n");
-  for (i = LB; i <= n; i++) {
-	if (nclique[i]) {
-	  fprintf(fp, "%d\t%lu\n", i, nclique[i]);
-	  sum += nclique[i];
-	  max = i;
-	}
+  int i,j;
+
+  SEXP prof = PROTECT(allocVector(VECSXP, NUM_CLIQUES));
+  
+  for (i = LB, j=0; i <= n; i++, j++) {
+	  if (nclique[i]) {
+	    SEXP pair = PROTECT(allocVector(INTSXP,2));
+	    INTEGER(pair)[0] = i;
+	    INTEGER(pair)[1] = (int)nclique[i];
+	    SET_VECTOR_ELT(prof, j, pair);
+	    UNPROTECT(1);
+	  }
   }
-  fprintf(fp, "\n");
-  fprintf(fp, "No. of vertices : %d\n", n);
-  fprintf(fp, "No. of edges    : %d\n", G->_num_edges);
-  fprintf(fp, "No. of cliques  : %lu\n", sum);
-  fprintf(fp, "Max clique size : %d\n", max);
+  /*if (PRINT) {
+    Rprintf("\n");
+    Rprintf("No. of vertices : %d\n", n);
+    Rprintf("No. of edges    : %d\n", G->_num_edges);
+    Rprintf("No. of cliques  : %d\n", NUM_CLIQUES);
+    Rprintf("Max clique size : %d\n", i-1);
+  }*/
+  return prof;
 }
 
 
@@ -78,7 +69,7 @@ void clique_profile_out(FILE *fp, u64 *nclique, Graph *G)
  *   Bron-Kerbosch version 2                                     *
  *   Recursive function to find cliques                          *
  * ------------------------------------------------------------- */
-void clique_find_v2(FILE *fp, u64 *nclique, Graph *G, \
+void clique_find_v2(u64 *nclique, Graph *G, \
 		vid_t *clique, vid_t *old, SEXP cliques, int lc, int ne, int ce)
 {
   vid_t new[ce];
@@ -86,15 +77,6 @@ void clique_find_v2(FILE *fp, u64 *nclique, Graph *G, \
   vid_t fixp=0, p, u;
   int s=0, pos=0, nod, minnod, count;
   int i, j, k;
-
-#ifdef DEBUG
-  for (i = 0; i < ne; i++) printf(" %s", G->_label[old[i]]);
-  printf("\t|");
-  for (i = 0; i < lc; i++) printf(" %s", G->_label[clique[i]]);
-  printf("\t|");
-  for (i = ne; i < ce; i++) printf(" %s", G->_label[old[i]]);
-  printf("\n");
-#endif
 
   /* Choose a vertex, fixp, in old (both not and cand) that
 	 has lowest number of non-adjacent vertices in old cand */
@@ -141,11 +123,11 @@ void clique_find_v2(FILE *fp, u64 *nclique, Graph *G, \
 	if (lc+1 <= UB) {
 	  if (new_ce == 0 && lc+1 >= LB) {
 	    nclique[lc+1]++;
-	    //if (PRINT) clique_out(fp, G, clique, lc+1);
-		  append_clique(cliques, G, clique, lc+1);
+		  if (!PROFILE) append_clique(cliques, G, clique, lc+1);
+		  NUM_CLIQUES++;
 	  }
 	  else if (new_ne < new_ce) {
-	    clique_find_v2(fp, nclique, G, clique, new, cliques, lc+1, new_ne, new_ce);
+	    clique_find_v2(nclique, G, clique, new, cliques, lc+1, new_ne, new_ce);
 	  }
 	}
 	
@@ -154,14 +136,12 @@ void clique_find_v2(FILE *fp, u64 *nclique, Graph *G, \
 
 	/* Bound condition: Stop if fixp is a neighbor of all candidates */ 
     if (k > 1) {
-	  for (s = ne; s < ce; s++) {
-	    if (!edge_exists(G, fixp, old[s])) break;
+	    for (s = ne; s < ce; s++) {
+	      if (!edge_exists(G, fixp, old[s])) break;
+	    }
+	    if (s == ce) return;
 	  }
-	  if (s == ce) return;
-	}
-
   }
-
   return;
 }
 
