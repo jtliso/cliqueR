@@ -53,9 +53,8 @@ cliqueR.maximal <- function(filename, least=3, most=-1) {
   if(res == -1){
     return(res)
   }
-  
-  vertices <- .Call("R_maximal_clique", filename, least, most)
-
-  return(vertices)
+  a = .Call("R_maximal_clique", filename, least, most)
+  #unlist(a)
+  return (a[-which(sapply(a, is.null))])
 }
 

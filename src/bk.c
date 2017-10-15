@@ -16,6 +16,7 @@ int LB, UB;
 int VERSION;
 int PRINT;
 int NUM_PROTECTED;
+int NUM_CLIQUES;
 
 /* ------------------------------------------------------------- *
  * Function: clique_out()                                        *
@@ -32,7 +33,7 @@ void clique_out(FILE *fp, Graph *G, vid_t *clique, int len)
 /* ------------------------------------------------------------- *
  * Function: append_clique()                                     *
  * ------------------------------------------------------------- */
-void append_clique(SEXP cliques, int index, Graph *G, vid_t *clique, int len)
+void append_clique(SEXP cliques, Graph *G, vid_t *clique, int len)
 {
   int i;
   SEXP rclique = PROTECT(allocVector(STRSXP, len));
@@ -40,8 +41,9 @@ void append_clique(SEXP cliques, int index, Graph *G, vid_t *clique, int len)
   for (i = 0; i < len; i++)  
 	SET_STRING_ELT(rclique, i, mkChar(G->_label[clique[i]]));
   
-  SET_VECTOR_ELT(cliques, index, rclique);
-  NUM_PROTECTED++;
+  SET_VECTOR_ELT(cliques, NUM_CLIQUES++, rclique);
+  UNPROTECT(1);
+  //NUM_PROTECTED++;
   return;
 }
 
@@ -77,7 +79,7 @@ void clique_profile_out(FILE *fp, u64 *nclique, Graph *G)
  *   Recursive function to find cliques                          *
  * ------------------------------------------------------------- */
 void clique_find_v2(FILE *fp, u64 *nclique, Graph *G, \
-		vid_t *clique, vid_t *old, SEXP cliques, int lc, int ne, int ce, int num_cliques)
+		vid_t *clique, vid_t *old, SEXP cliques, int lc, int ne, int ce)
 {
   vid_t new[ce];
   int new_ne, new_ce;
@@ -140,11 +142,10 @@ void clique_find_v2(FILE *fp, u64 *nclique, Graph *G, \
 	  if (new_ce == 0 && lc+1 >= LB) {
 	    nclique[lc+1]++;
 	    //if (PRINT) clique_out(fp, G, clique, lc+1);
-		append_clique(cliques, num_cliques, G, clique, lc+1);
-		num_cliques++;
+		  append_clique(cliques, G, clique, lc+1);
 	  }
 	  else if (new_ne < new_ce) {
-	    clique_find_v2(fp, nclique, G, clique, new, cliques, lc+1, new_ne, new_ce, num_cliques);
+	    clique_find_v2(fp, nclique, G, clique, new, cliques, lc+1, new_ne, new_ce);
 	  }
 	}
 	

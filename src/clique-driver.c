@@ -38,6 +38,7 @@
 extern int LB,UB;  // lower bound and upper bound of clique size
 extern int PRINT;
 extern int NUM_PROTECTED;
+extern int NUM_CLIQUES;
 char *outfn, infn[100];
 
 SEXP run_maximal_clique(Graph *G)
@@ -64,7 +65,7 @@ SEXP run_maximal_clique(Graph *G)
   memset(nclique, 0, (n+1)*sizeof(u64));
   memset(clique, -1, n*sizeof(vid_t));
   for (i = 0; i < n; i++) vertices[i] = i;
-  clique_find_v2(fp1, nclique, G, clique, vertices, cliques, 0, 0, n, 0);
+  clique_find_v2(fp1, nclique, G, clique, vertices, cliques, 0, 0, n);
   utime = get_cur_time() - utime;
 
   clique_profile_out(fp2, nclique, G);
@@ -86,6 +87,7 @@ SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound)
   LB = asInteger(R_lowerbound);
   PRINT = 1;
   NUM_PROTECTED = 0;
+  NUM_CLIQUES = 0;
   
   const char *filepath = CHARPT(R_file, 0);
   if (strlen(filepath) > 99) {
