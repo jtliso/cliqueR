@@ -6,6 +6,8 @@
 
 
 #include <string.h>
+#include <R.h>
+
 #include "graph_maximal.h"
 
 // trie node
