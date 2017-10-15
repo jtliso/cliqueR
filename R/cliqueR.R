@@ -45,19 +45,16 @@ cliqueR.paraclique <- function(filename, igf=1.0, min_mc_size=5, min_pc_size=5, 
   return(vertices)
 }
 
+cliqueR.maximal <- function(filename, least=3, most=-1) {
+  #checking the format of the file
+  res <- formatter(filename)
+  
+  #exiting on error
+  if(res == -1){
+    return(res)
+  }
+  a = .Call("R_maximal_clique", filename, least, most)
+  #unlist(a)
+  return (a[-which(sapply(a, is.null))])
+}
 
-#cliqueR.maximal <- function(filename, least=3, most=-1) {
-#  #checking the format of the file
-#  res <- formatter(filename)
-#  
-#  #exiting on error
-#  if(res == -1){
-#    return(res)
-#  }
-#  
-#  vertices <- .Call("find_maximal", filename, least, most)
-#  #vertices <- find_maximal(filename, least, most)
-#  
-#  return(vertices)
-#
-#}
