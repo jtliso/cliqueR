@@ -37,9 +37,10 @@
 /* Global variables */
 extern int LB,UB;  // lower bound and upper bound of clique size
 extern int PRINT;
+extern int NUM_PROTECTED;
 char *outfn, infn[100];
 
-void run_maximal_clique(Graph *G)
+SEXP run_maximal_clique(Graph *G)
 {
   FILE *fp1=stdout, *fp2;
   char fname[100];
@@ -47,6 +48,8 @@ void run_maximal_clique(Graph *G)
   unsigned int n = num_vertices(G);
   vid_t clique[n];
   vid_t vertices[n];
+  SEXP cliques = PROTECT(allocVector(VECSXP, n));
+  NUM_PROTECTED++;
   u64 nclique[n+1];
   int i;
 
@@ -61,7 +64,7 @@ void run_maximal_clique(Graph *G)
   memset(nclique, 0, (n+1)*sizeof(u64));
   memset(clique, -1, n*sizeof(vid_t));
   for (i = 0; i < n; i++) vertices[i] = i;
-  clique_find_v2(fp1, nclique, G, clique, vertices, 0, 0, n);
+  clique_find_v2(fp1, nclique, G, clique, vertices, cliques, 0, 0, n, 0);
   utime = get_cur_time() - utime;
 
   clique_profile_out(fp2, nclique, G);
@@ -70,7 +73,8 @@ void run_maximal_clique(Graph *G)
   if (outfn != NULL) free(outfn);
   fclose(fp1);
   fclose(fp2);
-
+  
+  return cliques;
 }
 
 SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound)
@@ -78,10 +82,10 @@ SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound)
   Graph *G;
   FILE *fp;
 
-  /* set globals */
   UB = asInteger(R_upperbound); 
   LB = asInteger(R_lowerbound);
   PRINT = 1;
+  NUM_PROTECTED = 0;
   
   const char *filepath = CHARPT(R_file, 0);
   if (strlen(filepath) > 99) {
@@ -99,10 +103,11 @@ SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound)
   
   if (UB <= 0) UB = num_vertices(G);
   
-  run_maximal_clique(G);
+  SEXP ret = run_maximal_clique(G);
   graph_free(G);
-
-  return 0;
+  
+  UNPROTECT(NUM_PROTECTED);
+  return ret;
 }
 
 
