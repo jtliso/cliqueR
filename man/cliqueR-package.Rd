@@ -3,28 +3,30 @@
 \alias{cliqueR}
 \docType{package}
 \title{
-  A short title line describing what the package does
+  Clique Enumeration Suite 
 }
 \description{
-  A more detailed description of what the package does. A length
-  of about one to five lines is recommended.
+  Fast maximum clique, maximal clique, and paraclique enumeration for edgelist graph files
 }
 \details{
-  This section should provide a more detailed overview of how to use the
-  package, including the most important functions.
+  Three clique finding functions are provided:
+  maximum clique - cliqueR.maximum
+  maximal clique - cliqueR.maximal
+  paraclique - cliqueR.paraclique
+  
+  All functions require a tab separated edgelist graph file, with the number of vertices and edges prepended. 
 }
 \author{
-Your Name, email optional.
+J.T. Liso, Sean Whalen, Shan Lalani, Daniel Lowe, and Axel Hranov
 
-Maintainer: Your Name <your@email.com>
+Maintainer: J.T. Liso <your@email.com>
 }
 \references{
-  This optional section can contain literature or other references for
-  background information.
+  This package is an R wrapper for clique algorithms originally written in C C++, produced at the request of Michael Langston and Charles Phillips at the University of Tennessee, Knoxville. The maximal clique C source was written by Yun Zhang, yzhang@cs.utk.edu, December 12, 2004. The maximum and paraclique C++ source is authored by John Eblen, August 15, 2007. All code used with permission. 
 }
-\keyword{ package }
+\keyword{ clique }
 \seealso{
-  Optional links to other man pages
+  Sister package to: \link{https://cran.r-project.org/package=biclique}
 }
 \examples{
   \dontrun{
