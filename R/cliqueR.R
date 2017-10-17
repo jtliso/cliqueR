@@ -80,7 +80,7 @@ cliqueR.paraclique <- function(filename, igf=1.0, min_mc_size=5, min_pc_size=5, 
   
   vertices <- find_paracliques(filename, igf, min_mc_size, min_pc_size, max_num_pcs)
   
-  return(vertices)
+  return(vertices[order(sapply(vertices,length),decreasing=F)])
 }
 #' Maximal clique enumeration
 #' 
