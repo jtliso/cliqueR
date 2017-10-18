@@ -43,10 +43,13 @@ BEGIN_RCPP
 END_RCPP
 }
 
+RcppExport SEXP R_maximal_clique(SEXP, SEXP, SEXP, SEXP);
+
 static const R_CallMethodDef CallEntries[] = {
     {"_cliqueR_maximum_clique", (DL_FUNC) &_cliqueR_maximum_clique, 1},
     {"_cliqueR_format_checker", (DL_FUNC) &_cliqueR_format_checker, 1},
     {"_cliqueR_find_paracliques", (DL_FUNC) &_cliqueR_find_paracliques, 5},
+    {"R_maximal_clique",          (DL_FUNC) &R_maximal_clique,          4},
     {NULL, NULL, 0}
 };
 
