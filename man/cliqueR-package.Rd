@@ -26,7 +26,7 @@ Maintainer: J.T. Liso <your@email.com>
 }
 \keyword{ clique }
 \seealso{
-  Sister package to: \link{https://cran.r-project.org/package=biclique}
+  Sister package to: \link[https://cran.r-project.org/package=biclique]{biclique}
 }
 \examples{
   \dontrun{
