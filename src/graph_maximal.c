@@ -131,11 +131,17 @@ Graph * UW_EdgeList_in(FILE *fp)
 {
   unsigned int u, v, n, e, i;
   Graph *G;
-  fscanf(fp, "%d %d", &n, &e);
+  int f = fscanf(fp, "%d %d", &n, &e);
+
+  if(f != 2){
+    fprintf(stderr, "Bad file format : n e incorrect\n");
+    exit(-1);
+  }
+
   G = graph_make(n);
   for (i = 0; i < e; i++) {
-    fscanf(fp, "%d", &u);
-    fscanf(fp, "%d", &v);
+    f = fscanf(fp, "%d", &u);
+    f = fscanf(fp, "%d", &v);
     add_edge(G, u, v);
   }
   return G;
