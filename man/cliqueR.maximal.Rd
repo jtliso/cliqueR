@@ -17,7 +17,9 @@ return every edge in the graph).}
 \item{profile}{Integer. Option to return a clique profile instead of all cliques.}
 }
 \value{
-A list of cliques. Each clique is a list of Character vertex labels. Ordered by size.
+A list of cliques ordered by size. Each clique is a list of Character vertex labels.
+  If the profile option is specified a list of cliques sizes and number of occurrences
+   will be returned instead.
 }
 \description{
 \code{cliqueR.maximal} returns a list of cliques, ordered by size.
@@ -26,4 +28,9 @@ A list of cliques. Each clique is a list of Character vertex labels. Ordered by 
 A clique is a set of vertices such that every vertex is connected to every other
 vertex in the set. Maximal clique returns a list of all the cliques in a graph, from 
 3 to the number of vertices in the graph, unless the user specifies otherwise.
+}
+\examples{
+cliqueR.maximal(system.file("extdata","bio-yeast.el",package="cliqueR"))
+cliqueR.maximal(system.file("extdata","bio-yeast.el",package="cliqueR"), profile=1)
+\donttest{cliqueR.maximal(system.file("extdata","bio-yeast.el",package="cliqueR"), 5, 10)}
 }

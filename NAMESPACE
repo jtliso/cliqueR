@@ -1,3 +1,5 @@
 useDynLib(cliqueR, .registration=TRUE)
-exportPattern("^[[:alpha:]]+")
+export(cliqueR.maximal)
+export(cliqueR.maximum)
+export(cliqueR.paraclique)
 importFrom(Rcpp, evalCpp)
