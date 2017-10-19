@@ -3,8 +3,14 @@ Type: Package
 Title: Maximal, Maximum, Paraclique in Undirected Graphs
 Version: 1.0
 Date: 2017-10-18
-Author: Your Name
-Maintainer: Your Name <your@email.com>
+Author: c(
+    person("Liso", "J.T.", , "gliso@vols.utk.edu", role = c("aut", "cre")),
+    person("Whalen", "Sean", role = "aut"),
+    person("Lowe", "Daniel", role = "aut"),
+    person("Lalani", "Shan", role = "aut"),
+    person("Hranov", "Axel", role = "aut")
+    )
+Maintainer: Charles Phillips <cphill25@vols.utk.edu>
 Description: A tool for finding maximal, maximum, and paracliques within graphs. The input should be an edge
         list file where the first line is the number of vertices followed by the number of edges (tab-separated)
         followed by each edge on a line (edges should be tab separated vertices). A format checker function verifies
