@@ -110,6 +110,7 @@ cliqueR.maximal <- function(filename, least=3, most=-1, profile=0) {
   if (is.null(a))
     return(list())
   
-  return (a[-which(sapply(a, is.null))])
+  vertices <- a[-which(sapply(a, is.null))]
+  return(vertices[order(sapply(vertices, length), decreasing=F)])
 }
 
