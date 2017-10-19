@@ -4,7 +4,7 @@ Title: Maximal, Maximum, Paraclique in Undirected Graphs
 Version: 1.0
 Date: 2017-10-18
 Author: c(
-    person("Liso", "J.T.", , "gliso@vols.utk.edu", role = c("aut", "cre")),
+    person("Liso", "J.T.", , "jtliso417@vols.utk.edu", role = c("aut", "cre")),
     person("Whalen", "Sean", role = "aut"),
     person("Lowe", "Daniel", role = "aut"),
     person("Lalani", "Shan", role = "aut"),
