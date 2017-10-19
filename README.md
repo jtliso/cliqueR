@@ -42,8 +42,8 @@ By default, these values are 3, -1, and 0 respectively.
 
 Example calls:
 
-    cliqueR.maximal("graphs/bio-yeast.el")
-    cliqueR.maximal("graphs/bio-yeast.el", 5)
+    cliqueR.maximal("inst/extdata/bio-yeast.el")
+    cliqueR.maximal("inst/extdata/bio-yeast.el", 5)
     
 ### Maximum
 
@@ -51,8 +51,8 @@ To find the maximum clique, you need the file name at a bare minimum.  It also h
 
 Example calls:
     
-    cliqueR.maximum("graphs/bio-yeast.el")
-    cliqueR.maximum("graphs/bio-yeast.el", TRUE)
+    cliqueR.maximum("inst/extdata/bio-yeast.el")
+    cliqueR.maximum("inst/extdata/bio-yeast.el", TRUE)
     
 ### Paraclique
 
