@@ -110,6 +110,7 @@ cliqueR.maximal <- function(filename, least=3, most=-1, profile=0) {
   if (is.null(a)) {
     print("NULL")
     return(list())
+
   }
   if (profile) {
     blank = sapply(a, is.null)
@@ -120,5 +121,7 @@ cliqueR.maximal <- function(filename, least=3, most=-1, profile=0) {
   } 
     
   return(a[order(sapply(a,length),decreasing=F)])
+
+
 }
 
