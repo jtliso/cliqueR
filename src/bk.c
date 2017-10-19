@@ -16,21 +16,66 @@ int LB, UB;
 int VERSION;
 int PROFILE;
 int NUM_CLIQUES;
+int CLIQUES_SZ;
+vid_t ** CLIQUES;
 
+/* ------------------------------------------------------------- *
+ * Function: free_cliques()                                      *
+ * ------------------------------------------------------------- */
+void free_cliques() {
+  int i;
+  for (i=0; i<CLIQUES_SZ; i++) {
+    free(CLIQUES[i]);
+  }
+  free(CLIQUES);
+}
+
+/* ------------------------------------------------------------- *
+ * Function: extract_cliques()                                     *
+ * ------------------------------------------------------------- */
+void extract_cliques(SEXP R_cliques, Graph *G) {
+	int i,j,len;
+	for(i=0; i<NUM_CLIQUES; i++) {
+		len = (int)CLIQUES[i][0];
+		SEXP R_clique = PROTECT(allocVector(STRSXP, len));
+		for (j=0; j<len; j++) {
+			SET_STRING_ELT(R_clique, j, mkChar(G->_label[CLIQUES[i][j+1]]));
+		}
+		SET_VECTOR_ELT(R_cliques, i, R_clique);
+		UNPROTECT(1);
+		free(CLIQUES[i]);
+	}
+	free(CLIQUES);
+}
+	
 /* ------------------------------------------------------------- *
  * Function: append_clique()                                     *
  * ------------------------------------------------------------- */
-void append_clique(SEXP cliques, Graph *G, vid_t *clique, int len)
+int append_clique(Graph *G, vid_t *clique, int len)
 {
-  int i;
-  SEXP rclique = PROTECT(allocVector(STRSXP, len));
+  vid_t *new_clique;
+  new_clique = malloc(sizeof(vid_t)*(len+1));
+  if (new_clique == NULL) {
+	  error("malloc: Memory exhausted, quitting");
+	  return 1;
+  }
+  new_clique[0] = len;
+  memcpy(new_clique+1, clique, sizeof(vid_t)*len);
   
-  for (i = 0; i < len; i++)  
-	SET_STRING_ELT(rclique, i, mkChar(G->_label[clique[i]]));
+  if (NUM_CLIQUES == CLIQUES_SZ) {
+	  vid_t **tmp = realloc(CLIQUES, sizeof(vid_t*)*CLIQUES_SZ*2);
+    if (tmp == NULL) {
+      error("realloc: Memory exhausted, quitting");
+      return 1;
+    }
+	  else {
+	    CLIQUES = tmp;
+	    CLIQUES_SZ*=2;
+	  }
+  }
   
-  SET_VECTOR_ELT(cliques, NUM_CLIQUES, rclique);
-  UNPROTECT(1);
-  return;
+  CLIQUES[NUM_CLIQUES] = new_clique;
+  return 0;
 }
 
 
@@ -69,8 +114,8 @@ SEXP clique_profile_out(u64 *nclique, Graph *G)
  *   Bron-Kerbosch version 2                                     *
  *   Recursive function to find cliques                          *
  * ------------------------------------------------------------- */
-void clique_find_v2(u64 *nclique, Graph *G, \
-		vid_t *clique, vid_t *old, SEXP cliques, int lc, int ne, int ce)
+int clique_find_v2(u64 *nclique, Graph *G, \
+		vid_t *clique, vid_t *old, int lc, int ne, int ce)
 {
   vid_t new[ce];
   int new_ne, new_ce;
@@ -123,11 +168,14 @@ void clique_find_v2(u64 *nclique, Graph *G, \
 	if (lc+1 <= UB) {
 	  if (new_ce == 0 && lc+1 >= LB) {
 	    nclique[lc+1]++;
-		  if (!PROFILE) append_clique(cliques, G, clique, lc+1);
+		  if (!PROFILE) {
+		    if (append_clique(G, clique, lc+1))
+			  return 1;
+		  }
 		  NUM_CLIQUES++;
 	  }
 	  else if (new_ne < new_ce) {
-	    clique_find_v2(nclique, G, clique, new, cliques, lc+1, new_ne, new_ce);
+	    if(clique_find_v2(nclique, G, clique, new, lc+1, new_ne, new_ce)) return 1;
 	  }
 	}
 	
@@ -139,10 +187,10 @@ void clique_find_v2(u64 *nclique, Graph *G, \
 	    for (s = ne; s < ce; s++) {
 	      if (!edge_exists(G, fixp, old[s])) break;
 	    }
-	    if (s == ce) return;
+	    if (s == ce) return 0;
 	  }
   }
-  return;
+  return 0;
 }
 
 

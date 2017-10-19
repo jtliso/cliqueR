@@ -39,6 +39,8 @@ extern int LB,UB;  // lower bound and upper bound of clique size
 extern int PROFILE;
 extern int NUM_PROTECTED;
 extern int NUM_CLIQUES;
+extern int CLIQUES_SZ;
+extern vid_t **CLIQUES;
 char infn[100];
 
 SEXP run_maximal_clique(Graph *G)
@@ -47,7 +49,7 @@ SEXP run_maximal_clique(Graph *G)
   unsigned int n = num_vertices(G);
   vid_t clique[n];
   vid_t vertices[n];
-  SEXP cliques = R_NilValue;
+  SEXP R_cliques = R_NilValue;
   u64 nclique[n+1];
   int i;
 
@@ -56,17 +58,32 @@ SEXP run_maximal_clique(Graph *G)
   memset(clique, -1, n*sizeof(vid_t));
   for (i = 0; i < n; i++) vertices[i] = i;
   
-  if (!PROFILE) cliques = PROTECT(allocVector(VECSXP, n));
+  CLIQUES_SZ = n;
+  if (!PROFILE) {
+    CLIQUES = malloc(CLIQUES_SZ * sizeof(vid_t*));
+	  if (CLIQUES == NULL) {
+		  error("malloc: Memory exhausted, quitting");
+		  return R_NilValue;
+	  }
+  }
   
-  clique_find_v2(nclique, G, clique, vertices, cliques, 0, 0, n);
+  if (clique_find_v2(nclique, G, clique, vertices, 0, 0, n)) {
+	  free_cliques();
+	  return R_NilValue;
+  }
+  
   utime = get_cur_time() - utime;
 
   if (PROFILE) {
-    cliques = clique_profile_out(nclique, G);
+    R_cliques = clique_profile_out(nclique, G);
     //Rprintf("Time (seconds)  : %.6f\n", utime);
   }
+  else {
+    R_cliques = PROTECT(allocVector(VECSXP, NUM_CLIQUES));
+	  extract_cliques(R_cliques, G);
+  }	
   
-  return cliques;
+  return R_cliques;
 }
 
 SEXP R_maximal_clique(SEXP R_file, SEXP R_lowerbound, SEXP R_upperbound, SEXP R_profile)
