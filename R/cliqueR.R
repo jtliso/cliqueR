@@ -107,9 +107,18 @@ cliqueR.maximal <- function(filename, least=3, most=-1, profile=0) {
     return(invisible(res))
   }
   a = .Call("R_maximal_clique", filename, least, most, profile)
-  if (is.null(a))
+  if (is.null(a)) {
+    print("NULL")
     return(list())
-  
-  return (a[-which(sapply(a, is.null))])
+  }
+  if (profile) {
+    blank = sapply(a, is.null)
+    if (length(blank))
+      return(a[-which(blank)])
+    else
+      return(a)
+  } 
+    
+  return(a[order(sapply(a,length),decreasing=F)])
 }
 
