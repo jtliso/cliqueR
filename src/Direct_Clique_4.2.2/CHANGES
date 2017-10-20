@@ -1,6 +1,0 @@
-June 1, 2010
-Changes from Direct Clique 4.2.1 to Direct Clique 4.2.2
-
-* Fixed a bug in Preprocessor.h that caused the depth parameter to be ignored.
-  Changing the depth at which an interleaved preprocessor is applied had no
-  effect, and it would still run at all levels of the search tree.
