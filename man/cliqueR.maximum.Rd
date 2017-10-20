@@ -24,3 +24,7 @@ A clique is a set of vertices such that every vertex is connected to every other
 vertex in the set. The maximum clique of a graph is the clique that has the largest
 number of vertices.
 }
+\examples{
+cliqueR.maximum(system.file("extdata","bio-yeast.el",package = "cliqueR"))
+cliqueR.maximum(system.file("extdata","bio-yeast.el",package="cliqueR"), TRUE)
+}

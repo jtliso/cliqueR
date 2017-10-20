@@ -16,7 +16,7 @@ cliqueR.paraclique(filename, igf = 1, min_mc_size = 5, min_pc_size = 5,
 
 \item{min_pc_size}{Integer the minimum paraclique size to include.}
 
-\item{max_num_pcs}{Integer max number of paracliques to return, default is.}
+\item{max_num_pcs}{Integer max number of paracliques to return, default is number of vertices.}
 }
 \value{
 A List of paracliques. Each paraclique itself is a list of Character vertex labels. 
@@ -28,7 +28,16 @@ A List of paracliques. Each paraclique itself is a list of Character vertex labe
 \details{
 A clique is a set of vertices such that every vertex is connected to every other
 vertex in the set. A paraclique is a clique that includes vertices which are not 
-connected to every other vertex, but are connected to some. The proportion of edges
+connected to every other vertex in the clique, but are connected to some. The proportion of edges
 a vertex has to the size of the core clique is called the glom factor. The glom factor
-determines membership of a given vertex to a paraclique.
+determines membership of a given vertex to a paraclique. Note that a glom factor approaching
+0 will produce numerous large cliques, and significantly increase the risk of the function
+never returning for large graphs.
+}
+\examples{
+cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"))
+\donttest{cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"), 0.7)
+cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"), 0.7, 6)
+cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"), 0.7, 6, 7)
+cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"), 0.7, 6, 7, 20)}
 }
