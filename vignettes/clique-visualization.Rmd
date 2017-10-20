@@ -1,0 +1,43 @@
+---
+title: "Clique visualization with igraph"
+author: "Sean Whalen"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Clique visualization with igraph}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+The 'cliqueR' package can quickly compute the maximum clique of a graph, as well as enumerate cliques and paracliques of various sizes. Visualizing these results is outside the scope of the package, but can easily be achieved by using the 'igraph' package. Note that the igraph package already supports some clique finding funcions: maximal and maximum, but not paraclique. 
+
+## Highlight the maximum clique of a graph
+
+Read in an edgelist graph file. Graphs formatted for 'cliqueR' are prepended by the number of vertices and egdges, so discard the first line when loading into a 'graph' object. 
+
+```{r}
+library(igraph)
+library(cliqueR)
+path = system.file("extdata","small_sparse",package="cliqueR")
+data = read.table(path)
+g = graph_from_data_frame(data[-c(1),], directed = FALSE)
+```
+
+Calculate the maximum clique
+
+```{r}
+mc = cliqueR.maximum(path)
+mc
+```
+
+Recolor the vertices comprising the maximum clique 
+
+```{r, fig.show='hold'}
+V(g)$color = "white"
+V(g)[unlist(mc)]$color = "red"
+sg = induced_subgraph(g, V(g)[unlist(mc)])
+V(sg)$color = "red"
+plot(g, vertex.size=10, vertex.label=NA, main="graph")
+plot(sg, vertex.size=10, vertex.label.dist=3, main="max clique")
+
+```
