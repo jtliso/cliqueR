@@ -4,7 +4,7 @@ author: "Sean Whalen"
 date: "`r Sys.Date()`"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Clique visualization with igraph}
+  %\VignetteIndexEntry{clique-visualization}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
@@ -15,7 +15,7 @@ The 'cliqueR' package can quickly compute the maximum clique of a graph, as well
 
 Read in an edgelist graph file. Graphs formatted for 'cliqueR' are prepended by the number of vertices and egdges, so discard the first line when loading into a 'graph' object. 
 
-```{r}
+```{r, results="hide", warning=FALSE, message=FALSE}
 library(igraph)
 library(cliqueR)
 path = system.file("extdata","small_sparse",package="cliqueR")
