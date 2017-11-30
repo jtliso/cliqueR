@@ -8,6 +8,8 @@ library(shiny)
 library(cliqueR)
 library(igraph)
 
+counter=0
+
 function(input, output) {
   
   genGraph <- reactive({
@@ -19,7 +21,7 @@ function(input, output) {
   
   getCliques <- reactive({
     if (input$function_type == "maximal") {
-      cl = cliqueR.maximal(paste0("graphs/", input$graph_file), input$sizeRange[[1]], input$sizeRange[[2]])
+      cl = cliqueR.maximal(paste0("graphs/", input$graph_file), input$sizeRange[[1]], input$sizeRange[[2]], input$profile)
       return(cl)
     }
     
@@ -42,10 +44,7 @@ function(input, output) {
                                   min = 3, max = 20, value = c(3,20)),
            
           "paraclique" = sliderInput("glom", "Glom factor",
-                                  min = 0.0, max = 1.0, value = c(0.5)),
-          
-           "maximum" = checkboxInput("sizeOnly", "Return size only?",
-                                      value = FALSE)
+                                  min = 0.0, max = 1.0, value = c(0.5))
     )
   })
   
@@ -54,7 +53,7 @@ function(input, output) {
       return()
     
     switch(input$function_type,
-           "maximal" = checkboxInput("profile", "Return size profile only?", value=FALSE),
+           "maximal" = checkboxInput("profile", "Return clique size-profile only?", value=FALSE),
            "paraclique" = sliderInput("minMC", "Minimum clique size", min=3, max=20, value=5),
            "maximum" = return()
     )
@@ -69,12 +68,10 @@ function(input, output) {
     }
   })
   
-  output$ui_cl <- renderUI({
-    sliderInput("clique_index", "clique", min=1, max=as.integer(length(getCliques())), value=1, step=1)
-  })
-  
   output$graph <- renderPlot({
     vars = genGraph()
+    V(vars$graph)$color = "white"
+    E(vars$graph)$color = "grey"
     
     if (input$function_type == "maximum") {
       mc = cliqueR.maximum(paste0("graphs/", input$graph_file))
@@ -84,22 +81,56 @@ function(input, output) {
       E(vars$graph)[clique %--% clique]$color = "red"
       plot(vars$graph, frame=TRUE, vertix.size=5, vertex.label=NA, layout=vars$layout, rescale=FALSE, xlim=range(vars$layout[,1]), ylim=range(vars$layout[,2]))
     }
-    else {
+    if (input$function_type == "maximal") {
       cliques = getCliques()
+      
+      if (input$profile) {
+        profile = {}
+        for (cp in cliques) {
+          profile[toString(cp[1])] = cp[2]
+        }
+        return(
+          barplot(profile, main="Clique Profile", xlab="size", ylab="number of cliques")
+        )
+      }
+      
       if (length(cliques) == 0) {
         return(
           plot(vars$graph, frame=TRUE, vertix.size=5, vertex.label=NA, layout=vars$layout, rescale=FALSE, xlim=range(vars$layout[,1]), ylim=range(vars$layout[,2]))
         )
       }
-      i=input$clique_index
+      
+      i = (counter %% length(cliques))+1
+      counter <<- counter+1
+      invalidateLater(300)
       
       mc = cliques[[i]]
       V(vars$graph)[unlist(mc)]$color = "red"
       clique = V(vars$graph)[unlist(mc)]
-      E(vars$graph)$color = "grey"
       E(vars$graph)[clique %--% clique]$color = "red"
       plot(vars$graph, frame=TRUE, vertix.size=5, vertex.label=NA, layout=vars$layout, rescale=FALSE, xlim=range(vars$layout[,1]), ylim=range(vars$layout[,2]))
     }
+    
+    if (input$function_type == "paraclique") {
+      cliques = getCliques()  
+      if (length(cliques) == 0) {
+        return(
+          plot(vars$graph, frame=TRUE, vertix.size=5, vertex.label=NA, layout=vars$layout, rescale=FALSE, xlim=range(vars$layout[,1]), ylim=range(vars$layout[,2]))
+        )
+      }
+      mc = cliques[[1]]
+      V(vars$graph)[unlist(mc)]$color = "red"
+      clique = V(vars$graph)[unlist(mc)]
+      E(vars$graph)[clique %--% clique]$color = "red"
+      
+      sg = induced_subgraph(vars$graph, V(vars$graph)[unlist(mc)])
+      V(sg)$color = "red"
+      
+      par(mfrow=c(1,2))
+      plot(vars$graph, vertix.size=5, vertex.label=NA, layout=vars$layout, rescale=FALSE, xlim=range(vars$layout[,1]), ylim=range(vars$layout[,2]))
+      plot(sg, vertex.size=10, vertex.label.dist=2, main="paraclique")
+    }
+    
     
   })
   
