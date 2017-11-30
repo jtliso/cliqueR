@@ -13,10 +13,49 @@ library(Rcpp)
 # param - filename Character path to an edgelist (.el) file
 # return - If the graph is formatted correctly 0, otherwise -1 and an error
 #   message is printed.
-formatter <- function(filename){
-	result <- format_checker(filename)
-
-	return(result)
+formatter <- function(filename) {
+  t = read.table(filename, colClasses = "character")
+  if (length(t) != 2) {
+    warning(paste0("file ", filename, "should have 2 columns"))
+    return(invisible(-1))
+  }
+  if (nrow(t) < 2) {
+    warning(paste0("file", filename, " should have at least 2 rows"))
+    return(invisible(-1))
+  }
+  
+  # separate heading from edges
+  heading = t[1,]
+  t = t[2:nrow(t),]
+  
+  if (nrow(t) != as.integer(heading[2])) {
+    warning(paste0("file", filename, " heading doesn't match number of edges"))
+    return(invisible(-1))
+  }
+  
+  if (anyDuplicated(t)) {
+    warning(paste0("file", filename, " has duplicated edges"))
+    return(invisible(-1))
+  }
+  
+  for (i in 1:nrow(t)) {
+    edge = t[i,]
+    if (toString(edge[1]) == toString(edge[2])) {
+      print (edge)
+      print(edge[1])
+      print(edge[2])
+      warning(paste0("file", filename, " has a edge between the same vertex: ", toString(edge[1]), " ", toString(edge[2])))
+      return(invisible(-1))
+    }
+  }
+  
+  numVerts = length(unique(c(t[,1],t[,2])))
+  
+  if (numVerts != as.integer(heading[1])) {
+    warning(paste0("file", filename, " heading doesn't match number of vertices: ", heading[1], " ", numVerts))
+    return(invisible(-1))
+  }
+  return(invisible(1))
 }
 
 #' Maximum clique finder
@@ -133,4 +172,6 @@ cliqueR.maximal <- function(filename, least=3, most=-1, profile=0) {
   } 
   return(a[order(sapply(a,length),decreasing=F)])
 }
+
+
 

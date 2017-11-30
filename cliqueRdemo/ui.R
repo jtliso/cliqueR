@@ -28,10 +28,6 @@ shinyUI(fluidPage(
       uiOutput("ui_one"),
       uiOutput("ui_two"),
       uiOutput("ui_three")
-    )),
-    
-    column(3, conditionalPanel("input.function_type==='maximal' || input.function_type==='paraclique'",
-      uiOutput("ui_cl")
     ))),
   
   fluidRow(

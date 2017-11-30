@@ -5,10 +5,6 @@ maximum_clique <- function(filename) {
     .Call(`_cliqueR_maximum_clique`, filename)
 }
 
-format_checker <- function(file) {
-    .Call(`_cliqueR_format_checker`, file)
-}
-
 find_paracliques <- function(filename, igf, min_mc_size, min_pc_size, max_num_pcs) {
     .Call(`_cliqueR_find_paracliques`, filename, igf, min_mc_size, min_pc_size, max_num_pcs)
 }
