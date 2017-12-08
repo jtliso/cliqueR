@@ -32,7 +32,9 @@ connected to every other vertex in the clique, but are connected to some. The pr
 a vertex has to the size of the core clique is called the glom factor. The glom factor
 determines membership of a given vertex to a paraclique. Note that a glom factor approaching
 0 will produce numerous large cliques, and significantly increase the risk of the function
-never returning for large graphs.
+never returning for large graphs. 
+
+For questions about algorithms and implementations of the paraclique algorithm, we point users to the papers listed in References.
 }
 \examples{
 cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"))
@@ -41,3 +43,7 @@ cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"), 0.7,
 cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"), 0.7, 6, 7)
 cliqueR.paraclique(system.file("extdata","bio-yeast.el",package="cliqueR"), 0.7, 6, 7, 20)}
 }
+
+\references{Chesler EJ, Langston MA. Combinatorial Genetic Regulatory Network Analysis Tools for High Throughput Transcriptomic Data. In: Eskin E, editor. Systems Biology and Regulatory Genomics: Springer; 2006. p. 150–65.
+
+Hagan RD, Langston MA, Wang K. Lower Bounds on Paraclique Density. Discrete Applied Mathematics. 2016;204:208-12.}
