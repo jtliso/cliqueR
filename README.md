@@ -41,3 +41,7 @@ Paraclique returns a list of paracliques ordered by size.  At a minimum, the fil
 *  min_mc_size:  The minimum clique size to include.  Initialized to 5.
 *  min_pc_size:  The minimum paraclique size to include.  Initialzed to 5.
 *  max_num_pcs:  Max number of paracliques to include.  Initialized to -1.  
+
+### Demo
+
+[cliqueRdemo](https://github.com/jtliso/cliqueR/tree/master/cliqueRdemo) contains an interactive demo using the R packages shiny and igraph. Users can add their own graphs to cliqueRdemo/graphs to add interactive features with their own graphs.
